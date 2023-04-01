@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encryptor</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"
+      integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o="
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      @import url("https://fonts.cdnfonts.com/css/sf-pro-display");
+      body {
+        font-family: "SF Pro Display", sans-serif;
+        background-color: #181926;
+        color: #cad3f5;
+      }
+      .box {
+        border-radius: 50px;
+        background: #181926;
+        box-shadow: 20px 20px 60px #141520, -20px -20px 60px #1c1d2c;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      /* file upload style */
+      input[type="file"] {
+        width: 250px;
+        padding: 5px;
+        background: #363a4f;
+        border-radius: 15px;
+      }
+
+      input[type="file"]::file-selector-button {
+        margin-right: 20px;
+        border: none;
+        background: #5b6078;
+        padding: 10px 20px;
+        border-radius: 10px;
+        color: #fff;
+        cursor: pointer;
+        transition: background 0.2s ease-in-out;
+      }
+
+      input[type="file"]::file-selector-button:hover {
+        background: #6e738d;
+      }
+      /* */
+      .keyinput {
+        border-radius: 20px;
+        font-family: "SF Pro Display", sans-serif;
+        padding: 15px;
+        resize: none;
+        overflow: auto;
+        box-sizing: border-box;
+        border-radius: 10px;
+        background-color: #494d64;
+        color: #cad3f5;
+        border: none;
+      }
+      .keyinput69 {
+        border-radius: 20px;
+        font-family: "SF Pro Display", sans-serif;
+        padding: 15px;
+        resize: none;
+        overflow: auto;
+        box-sizing: border-box;
+        border-radius: 20px;
+        background-color: #494d64;
+        color: #cad3f5;
+        border: none;
+      }
+
+      textarea::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      textarea::-webkit-scrollbar-track {
+        border-radius: 20px;
+      }
+
+      textarea::-webkit-scrollbar-thumb {
+        background-color: #939ab7;
+        border-radius: 20px;
+      }
+
+      .btton{
+       margin-top: 17px;
+       height: 50px;
+       width: 150px;
+       border-radius: 20px;
+       border: none;
+       background-color: #363a4f;
+       color: #cad3f5;
+       cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <center>
+      <h1 style="margin: 50px; margin-bottom: 70px">Encrypt / decrypt files</h1>
+      <div class="box" style="height: 460px; width: 380px">
+        <h2 style="padding-top: 10px">Encrypt</h2>
+        <input type="file" name="" id="fileencrypt" class="uploadfile" />
+        <h3>Key</h3>
+        <textarea
+          name=""
+          id="secretkeyencrypt"
+          class="keyinput"
+          cols="40"
+          rows="10"
+        ></textarea>
+
+        <button id="encryptbutton" class="btton">Encrypt</button>
+      </div>
+      <div class="box" style="height: 460px; width: 380px; margin-top: 100px">
+        <h2 style="padding-top: 10px">Decrypt</h2>
+        <input type="file" name="" id="filedecrypt" class="uploadfile" />
+        <h3>Key</h3>
+        <textarea
+          name=""
+          id="secretkeydecrypt"
+          class="keyinput"
+          cols="40"
+          rows="10"
+        ></textarea>
+        <button id="decryptbutton" class="btton">Decrypt</button>
+      </div>
+
+      <div class="box" style="height: 670px; width: 380px; margin-top: 100px;">
+      <h2>Secret Key Generator</h2>
+      <div
+        id="secretkeybox"
+        style="
+          width: 300px;
+          height: 170px;
+          background-color: #5b6078;
+          border-radius: 30px;
+          position: relative;
+          margin-bottom: 20px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+      <img src="https://img1.picmix.com/output/stamp/normal/6/4/3/0/1810346_baf3d.gif" height="80px" alt="" style="transition: all 1s ease-in-out;">
+     </div>
+      <textarea name="" id="secretkey" cols="41" rows="20" readonly class="keyinput69"></textarea>
+      <div
+        id="strongnessindicator"
+        style="height: 14px; width: 330px; background-color: #ed8796 ; border-radius: 9990px; margin-top: 20px;"
+      ></div>
+     </div>
+     <p>my main site: <a href="https://voxeliorn1.vercel.app/" style="color: #dde3f6;">here</a></p>
+      <script>
+        var secretkeybox = document.getElementById("secretkeybox");
+        var secretkey = document.getElementById("secretkey");
+        var secretkeyarray = [];
+        var secretkeystring = "";
+        secretkeybox.addEventListener("mousemove", function (e) {
+          var x = e.clientX;
+          var y = e.clientY;
+          // multiple the x and y by a random number
+          x = x * Math.random();
+          y = y * Math.random();
+          secretkeyarray.push(x, y);
+          secretkeystring = secretkeyarray.join("");
+          var encrypted = CryptoJS.AES.encrypt(
+            secretkeystring,
+            Math.random().toString(36).substring(2, 15) +
+              Math.random().toString(36).substring(2, 15)
+          );
+          encrypted = encrypted
+            .toString()
+            .replace("U2FsdGVkX1", "")
+            .slice(0, -2)
+            .replace(/[^a-zA-Z0-9]/g, "");
+          // delete every 5th character
+          var encryptedarray = encrypted.split("");
+          for (var i = 0; i < encryptedarray.length; i++) {
+            if (i % 5 == 0) {
+              encryptedarray.splice(i, 1);
+            }
+          }
+          encrypted = encryptedarray.join("");
+
+          secretkey.value = encrypted;
+          // calculate how many bits is the secret key
+          var bits = Math.round(encrypted.length);
+          // make a strongness indicator
+          var strongnessindicator = document.getElementById(
+            "strongnessindicator"
+          );
+          if (bits < 70) {
+            document.querySelector("img").style.opacity = "0";
+            strongnessindicator.style.backgroundColor = "#ed8796";
+          } else if (bits < 600) {
+            strongnessindicator.style.backgroundColor = "#f5a97f";
+          } else if (bits < 1200) {
+            strongnessindicator.style.backgroundColor = "#eed49f";
+          } else if (bits < 2400) {
+            strongnessindicator.style.backgroundColor = "#a6da95";
+          } else if (bits < 4800) {
+            strongnessindicator.style.backgroundColor = "#8ae66c";
+          }
+        });
+      </script>
+
+      <script>
+        // encrypt a file with a secret key
+        document
+          .getElementById("encryptbutton")
+          .addEventListener("click", function () {
+            var file = document.getElementById("fileencrypt").files[0];
+            var secretkey = document.getElementById("secretkeyencrypt").value;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var encrypted = CryptoJS.AES.encrypt(e.target.result, secretkey);
+              // download the encrypted file with the same extention
+              var a = document.createElement("a");
+              a.href =
+                "data:application/octet-stream," +
+                encodeURIComponent(encrypted);
+              a.download = file.name;
+              a.click();
+            };
+            reader.readAsText(file);
+          });
+        // decrypt a file with a secret key
+        document
+          .getElementById("decryptbutton")
+          .addEventListener("click", function () {
+            var file = document.getElementById("filedecrypt").files[0];
+            var secretkey = document.getElementById("secretkeydecrypt").value;
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var decrypted = CryptoJS.AES.decrypt(e.target.result, secretkey);
+              // download the decrypted file with the same extention
+              var a = document.createElement("a");
+              a.href =
+                "data:application/octet-stream," +
+                encodeURIComponent(decrypted.toString(CryptoJS.enc.Utf8));
+              a.download = file.name;
+              a.click();
+            };
+            reader.readAsText(file);
+          });
+      </script>
+    </center>
+  </body>
+</html>
