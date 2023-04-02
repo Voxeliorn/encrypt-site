@@ -10,9 +10,6 @@
       integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o="
       crossorigin="anonymous"
     ></script>
-    <script src="https://cdn.jsdelivr.net/npm/@capacitor/core@4.1.0/dist/capacitor.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@capacitor/haptics@4.1.0/dist/plugin.js"></script>
-
     <style>
       @import url("https://fonts.cdnfonts.com/css/sf-pro-display");
       body {
@@ -185,7 +182,6 @@
         let secretkeyarray = [];
         let secretkeystring = "";
         let didclick = false;
-        const Haptics = Capacitor.Plugins.Haptics;
 
         secretkeybox.addEventListener("click", () => {
           didclick = true;
@@ -228,7 +224,7 @@
             } else if (bits < 4800) {
               strongnessindicator.style.backgroundColor = "#8ae66c";
             }
-            Haptics.vibrate();
+            navigator.vibrate(100); 
           }
         });
       </script>
