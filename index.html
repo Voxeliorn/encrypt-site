@@ -184,7 +184,7 @@
         let didclick = false;
 
         secretkeybox.addEventListener("click", () => {
-          if (navigator.vibrate()) {
+          if (navigator.vibrate(0)) {
             navigator.vibrate(200);
           }
           didclick = true;
@@ -195,7 +195,9 @@
         });
 
         secretkeybox.addEventListener("mousemove", (e) => {
-          if (navigator.vibrate()) {
+          // check if i can use navigator.vibrate
+          // if i can then vibrate
+          if (navigator.vibrate(0)) {
             navigator.vibrate(200);
           }
           if (didclick) {
