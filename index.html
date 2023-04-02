@@ -185,6 +185,9 @@
 
         secretkeybox.addEventListener("click", () => {
           didclick = true;
+          if ("vibrate" in navigator) {
+            navigator.vibrate(200);
+          }
           document.getElementById("uwuclickher").innerHTML = "Keep going!";
           setTimeout(() => {
             document.getElementById("uwuclickher").style.opacity = "0";
@@ -193,6 +196,9 @@
 
         secretkeybox.addEventListener("mousemove", (e) => {
           if (didclick) {
+            if ("vibrate" in navigator) {
+              navigator.vibrate(200);
+            }
             const x = e.clientX * Math.random();
             const y = e.clientY * Math.random();
             secretkeyarray.push(x, y);
