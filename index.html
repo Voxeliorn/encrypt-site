@@ -184,9 +184,6 @@
         let didclick = false;
 
         secretkeybox.addEventListener("click", () => {
-          if (navigator.vibrate(0)) {
-            navigator.vibrate(200);
-          }
           didclick = true;
           document.getElementById("uwuclickher").innerHTML = "Keep going!";
           setTimeout(() => {
@@ -195,11 +192,6 @@
         });
 
         secretkeybox.addEventListener("mousemove", (e) => {
-          // check if i can use navigator.vibrate
-          // if i can then vibrate
-          if (navigator.vibrate(0)) {
-            navigator.vibrate(200);
-          }
           if (didclick) {
             const x = e.clientX * Math.random();
             const y = e.clientY * Math.random();
