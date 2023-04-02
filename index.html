@@ -10,6 +10,9 @@
       integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o="
       crossorigin="anonymous"
     ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@capacitor/core@4.1.0/dist/capacitor.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@capacitor/haptics@4.1.0/dist/plugin.js"></script>
+
     <style>
       @import url("https://fonts.cdnfonts.com/css/sf-pro-display");
       body {
@@ -86,15 +89,15 @@
         border-radius: 20px;
       }
 
-      .btton{
-       margin-top: 17px;
-       height: 50px;
-       width: 150px;
-       border-radius: 20px;
-       border: none;
-       background-color: #363a4f;
-       color: #cad3f5;
-       cursor: pointer;
+      .btton {
+        margin-top: 17px;
+        height: 50px;
+        width: 150px;
+        border-radius: 20px;
+        border: none;
+        background-color: #363a4f;
+        color: #cad3f5;
+        cursor: pointer;
       }
     </style>
   </head>
@@ -129,87 +132,108 @@
         <button id="decryptbutton" class="btton">Decrypt</button>
       </div>
 
-      <div class="box" style="height: 670px; width: 380px; margin-top: 100px;">
-      <h2>Secret Key Generator</h2>
-      <div
-        id="secretkeybox"
-        style="
-          width: 300px;
-          height: 170px;
-          background-color: #5b6078;
-          border-radius: 30px;
-          position: relative;
-          margin-bottom: 20px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        "
-      >
-      <img src="https://img1.picmix.com/output/stamp/normal/6/4/3/0/1810346_baf3d.gif" height="80px" alt="" style="transition: all 1s ease-in-out;">
-     </div>
-      <textarea name="" id="secretkey" cols="41" rows="20" readonly class="keyinput69"></textarea>
-      <div
-        id="strongnessindicator"
-        style="height: 14px; width: 330px; background-color: #ed8796 ; border-radius: 9990px; margin-top: 20px;"
-      ></div>
-     </div>
-     <p>my main site: <a href="https://voxeliorn1.vercel.app/" style="color: #dde3f6;">here</a></p>
+      <div class="box" style="height: 670px; width: 380px; margin-top: 100px">
+        <h2>Secret Key Generator</h2>
+        <div
+          id="secretkeybox"
+          style="
+            width: 300px;
+            height: 170px;
+            background-color: #5b6078;
+            border-radius: 30px;
+            position: relative;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <p
+            id="uwuclickher"
+            style="transition: all 0.1s ease-in-out; margin: 10px"
+          >
+            click here to activate then move your mouse / tap on here as
+            randomly as you can
+          </p>
+        </div>
+        <textarea
+          name=""
+          id="secretkey"
+          cols="41"
+          rows="20"
+          readonly
+          class="keyinput69"
+        ></textarea>
+        <div
+          id="strongnessindicator"
+          style="
+            height: 14px;
+            width: 330px;
+            background-color: #ed8796;
+            border-radius: 9990px;
+            margin-top: 20px;
+          "
+        ></div>
+      </div>
+      <p>
+        my main site:
+        <a href="https://voxeliorn1.vercel.app/" style="color: #dde3f6">here</a>
+      </p>
       <script>
-        var secretkeybox = document.getElementById("secretkeybox");
-        var secretkey = document.getElementById("secretkey");
-        var secretkeyarray = [];
-        var secretkeystring = "";
-        secretkeybox.addEventListener("mousemove", function (e) {
-          var x = e.clientX;
-          var y = e.clientY;
-          // multiple the x and y by a random number
-          x = x * Math.random();
-          y = y * Math.random();
-          secretkeyarray.push(x, y);
-          secretkeystring = secretkeyarray.join("");
-          var encrypted = CryptoJS.AES.encrypt(
-            secretkeystring,
-            Math.random().toString(36).substring(2, 15) +
-              Math.random().toString(36).substring(2, 15)
-          );
-          encrypted = encrypted
-            .toString()
-            .replace("U2FsdGVkX1", "")
-            .slice(0, -2)
-            .replace(/[^a-zA-Z0-9]/g, "");
-          // delete every 5th character
-          var encryptedarray = encrypted.split("");
-          for (var i = 0; i < encryptedarray.length; i++) {
-            if (i % 5 == 0) {
-              encryptedarray.splice(i, 1);
-            }
-          }
-          encrypted = encryptedarray.join("");
+        const secretkeybox = document.getElementById("secretkeybox");
+        const secretkey = document.getElementById("secretkey");
+        let secretkeyarray = [];
+        let secretkeystring = "";
+        let didclick = false;
+        const Haptics = Capacitor.Plugins.Haptics;
 
-          secretkey.value = encrypted;
-          // calculate how many bits is the secret key
-          var bits = Math.round(encrypted.length);
-          // make a strongness indicator
-          var strongnessindicator = document.getElementById(
-            "strongnessindicator"
-          );
-          if (bits < 70) {
-            document.querySelector("img").style.opacity = "0";
-            strongnessindicator.style.backgroundColor = "#ed8796";
-          } else if (bits < 600) {
-            strongnessindicator.style.backgroundColor = "#f5a97f";
-          } else if (bits < 1200) {
-            strongnessindicator.style.backgroundColor = "#eed49f";
-          } else if (bits < 2400) {
-            strongnessindicator.style.backgroundColor = "#a6da95";
-          } else if (bits < 4800) {
-            strongnessindicator.style.backgroundColor = "#8ae66c";
+        secretkeybox.addEventListener("click", () => {
+          didclick = true;
+          document.getElementById("uwuclickher").innerHTML = "Keep going!";
+          setTimeout(() => {
+            document.getElementById("uwuclickher").style.opacity = "0";
+          }, 1000);
+        });
+
+        secretkeybox.addEventListener("mousemove", (e) => {
+          if (didclick) {
+            const x = e.clientX * Math.random();
+            const y = e.clientY * Math.random();
+            secretkeyarray.push(x, y);
+            secretkeystring = secretkeyarray.join("");
+            const encrypted = CryptoJS.AES.encrypt(
+              secretkeystring,
+              Math.random().toString(36).substring(2, 15) +
+                Math.random().toString(36).substring(2, 15)
+            )
+              .toString()
+              .replace("U2FsdGVkX1", "")
+              .slice(0, -2)
+              .split("")
+              .filter((_, i) => i % 5 !== 0)
+              .join("");
+            secretkey.value = encrypted;
+            const bits = Math.round(encrypted.length);
+            const strongnessindicator = document.getElementById(
+              "strongnessindicator"
+            );
+            if (bits < 70) {
+              strongnessindicator.style.backgroundColor = "#ed8796";
+            } else if (bits < 600) {
+              strongnessindicator.style.backgroundColor = "#f5a97f";
+            } else if (bits < 1200) {
+              strongnessindicator.style.backgroundColor = "#eed49f";
+            } else if (bits < 2400) {
+              strongnessindicator.style.backgroundColor = "#a6da95";
+            } else if (bits < 4800) {
+              strongnessindicator.style.backgroundColor = "#8ae66c";
+            }
+            Haptics.vibrate();
           }
         });
       </script>
 
       <script>
-        // encrypt a file with a secret key
         document
           .getElementById("encryptbutton")
           .addEventListener("click", function () {
@@ -218,7 +242,6 @@
             var reader = new FileReader();
             reader.onload = function (e) {
               var encrypted = CryptoJS.AES.encrypt(e.target.result, secretkey);
-              // download the encrypted file with the same extention
               var a = document.createElement("a");
               a.href =
                 "data:application/octet-stream," +
@@ -228,7 +251,6 @@
             };
             reader.readAsText(file);
           });
-        // decrypt a file with a secret key
         document
           .getElementById("decryptbutton")
           .addEventListener("click", function () {
@@ -237,7 +259,6 @@
             var reader = new FileReader();
             reader.onload = function (e) {
               var decrypted = CryptoJS.AES.decrypt(e.target.result, secretkey);
-              // download the decrypted file with the same extention
               var a = document.createElement("a");
               a.href =
                 "data:application/octet-stream," +
